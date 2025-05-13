@@ -5,7 +5,7 @@ from map_1 import map
 
 show_animation = True
 
-# 휴리스틱 함수: 유클리드 거리
+## 휴리스틱 함수: 유클리드 거리
 def heuristic(a, b):
     return math.hypot(b[0] - a[0], b[1] - a[1])
 

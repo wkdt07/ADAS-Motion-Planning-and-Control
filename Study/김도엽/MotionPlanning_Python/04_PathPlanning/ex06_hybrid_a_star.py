@@ -8,7 +8,7 @@ show_animation = True
 
 class Node:
     def __init__(self, parent=None, position=None):
-        self.parent = parent      # 부모 노드
+        self.parent = parent      ## 부모 노드
         self.position = position  # [x, y, yaw]
         self.g = 0.0              # 시작으로부터의 비용
         self.h = 0.0              # 휴리스틱 비용

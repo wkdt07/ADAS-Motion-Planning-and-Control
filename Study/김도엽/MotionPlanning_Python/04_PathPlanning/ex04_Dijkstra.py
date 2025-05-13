@@ -1,7 +1,7 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-from map_1 import map  # map() -> (start, goal, omap)
+from map_1 import map  ## map() -> (start, goal, omap)
 
 show_animation = True
 

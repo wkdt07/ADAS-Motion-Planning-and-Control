@@ -6,7 +6,7 @@ from ex01_PathPlanning_BothLane import Global2Local, Polyfit, VehicleModel_Lat, 
 class LaneWidthEstimator(object):
     def __init__(self, Lw_init=3.0):
         self.Lw = Lw_init
-        self.valid = False  # 이번 프레임에서 차선폭 추정 성공 여부
+        self.valid = False  ## 이번 프레임에서 차선폭 추정 성공 여부
 
     def update(self, coeff_L, coeff_R, isLaneValid_L, isLaneValid_R):
         self.valid = False
