@@ -17,12 +17,25 @@ if __name__ == "__main__":
     num_point = 5
     x_local = np.arange(0.0, 10.0, 0.5)
 
-    class PD_Controller(object):
-        def __init__(self):
+    class PurePursuit(object):
+        def __init__(self, step_time, coeff, Vx,):
             # Code
-        def ControllerInput(self):
-            # Code
-    
+            wheelbase=2.5
+            lookahead=2.0
+            self.L = wheelbase       # 차량의 휠베이스
+            self.Ld = lookahead      # Lookahead 거리
+            self.u = 0.0             # 조향각 출력
+
+        def ControllerInput(self, coeff, Vx):
+            # 1. lookahead 위치의 로컬 좌표 계산
+            x_look = self.Ld
+            y_look = coeff[0]*x_look**3 + coeff[1]*x_look**2 + coeff[2]*x_look + coeff[3]
+
+            # 2. lookahead 방향 각도 계산
+            alpha = np.arctan2(y_look, x_look)  # 전방 목표점과 차량 x축 사이의 각도
+
+            # 3. 조향각 계산 (Pure Pursuit 공식)
+            self.u = np.arctan2(2 * self.L * np.sin(alpha), self.Ld)
     time = []
     X_ego = []
     Y_ego = []
@@ -31,13 +44,13 @@ if __name__ == "__main__":
     frameconverter = Global2Local(num_point)
     polynomialfit = PolynomialFitting(num_degree,num_point)
     polynomialvalue = PolynomialValue(num_degree,np.size(x_local))
-    controller = PurePursuit(step_time, polynomialfit.coeff, Vx)
+    controller = PurePursuit(step_time, polynomialfit.coeff, Vx) # coeff는 3차 다항식의 계수들
     
     for i in range(int(simulation_time/step_time)):
         time.append(step_time*i)
-        X_ego.append(ego_vehicle.X)
-        Y_ego.append(ego_vehicle.Y)
-        X_ref_convert = np.arange(ego_vehicle.X, ego_vehicle.X+5.0, 1.0)
+        X_ego.append(float(ego_vehicle.X))
+        Y_ego.append(float(ego_vehicle.Y))
+        X_ref_convert = np.arange(float(ego_vehicle.X), float(ego_vehicle.X)+5.0, 1.0)
         Y_ref_convert = 2.0-2*np.cos(X_ref_convert/10)
         Points_ref = np.transpose(np.array([X_ref_convert, Y_ref_convert]))
         frameconverter.convert(Points_ref, ego_vehicle.Yaw, ego_vehicle.X, ego_vehicle.Y)

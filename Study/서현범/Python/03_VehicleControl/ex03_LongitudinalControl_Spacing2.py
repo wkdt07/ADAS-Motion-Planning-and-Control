@@ -3,14 +3,32 @@ import matplotlib.pyplot as plt
 
 from VehicleModel_Long import VehicleModel_Long
 
+
+# timegap 기반 ACC
+# 목표 거리차 = timegap * ego_vx
+# 그래서 timegap을 유지하기 위해서 ego 차량의 속도를 조절하는 것
 class PID_Controller_ConstantTimeGap(object):
-    def __init__(self, step_time, target_x, ego_x, ego_vx, timegap = 1.0, P_Gain=0.0, D_Gain=0.0, I_Gain=0.0):
+    def __init__(self, step_time, target_x, ego_x, ego_vx, timegap = 2.0,  P_Gain=1.0, D_Gain=0.8, I_Gain=0.0039):
         self.timegap = timegap
-        self.space = ego_vx * self.timegap
+        self.space = ego_vx * self.timegap  # 초기 목표 거리
         # Code
-    
+        self.dt = step_time
+        self.Kp = P_Gain
+        self.Kd = D_Gain
+        self.Ki = I_Gain
+        
+        self.prev_error = 0.0
+        self.integral = 0.0
+        self.u = 0.0  # 제어 입력 (가속도)
     def ControllerInput(self, target_x, ego_x, ego_vx):
         # Code
+        self.space = ego_vx * self.timegap
+
+        error = (target_x - ego_x) - self.space
+        self.integral += error * self.dt
+        derivative = (error - self.prev_error) / self.dt
+        self.u = self.Kp * error + self.Kd * derivative + self.Ki * self.integral
+        self.prev_error = error
         
 
 if __name__ == "__main__":

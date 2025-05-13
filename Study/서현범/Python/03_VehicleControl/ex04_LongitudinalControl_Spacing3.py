@@ -20,8 +20,8 @@ if __name__ == "__main__":
     time = []
     target_vehicle = VehicleModel_Long(step_time, m, 0.0, 30.0, 10.0)
     ego_vehicle = VehicleModel_Long(step_time, m, 0.5, 0.0, 5.0)
-    #controller = PID_Controller_ConstantSpace(step_time, target_vehicle.x, ego_vehicle.x)
-    controller = PID_Controller_ConstantTimeGap(step_time, target_vehicle.x, ego_vehicle.x, ego_vehicle.vx)
+    controller = PID_Controller_ConstantSpace(step_time, target_vehicle.x, ego_vehicle.x)
+    #controller = PID_Controller_ConstantTimeGap(step_time, target_vehicle.x, ego_vehicle.x, ego_vehicle.vx)
     for i in range(int(simulation_time/step_time)):
         time.append(step_time*i)
         vx_ego.append(ego_vehicle.vx)
@@ -29,8 +29,8 @@ if __name__ == "__main__":
         x_space.append(target_vehicle.x - ego_vehicle.x)
         x_reference.append(controller.space)
         timegap.append((target_vehicle.x - ego_vehicle.x)/ego_vehicle.vx)
-        #controller.ControllerInput(target_vehicle.x, ego_vehicle.x)
-        controller.ControllerInput(target_vehicle.x, ego_vehicle.x, ego_vehicle.vx)
+        controller.ControllerInput(target_vehicle.x, ego_vehicle.x)
+        #controller.ControllerInput(target_vehicle.x, ego_vehicle.x, ego_vehicle.vx)
         ego_vehicle.update(controller.u)
         if (time[i]<20):
             a_t = 0.0

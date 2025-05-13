@@ -1,6 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+# global 좌표의 waypoint를 local 좌표로 변환하는 클래스
+# local 좌표계는 차량의 위치를 원점으로 하고, 차량의 진행 방향을 x축으로 하는 좌표계
+# 차량의 위치는 (X_ego, Y_ego)이고, 차량의 진행 방향은 Yaw_ego로 주어진다.
+# 차량의 진행 방향은 시계 방향으로 증가하는 각도로 정의된다.
+# 차량의 진행 방향을 기준으로 좌표계를 회전시키는 변환 행렬을 사용하여 global 좌표를 local 좌표로 변환한다.
 class Global2Local(object):
     def __init__(self, num_points):
         self.n = num_points
@@ -9,7 +14,15 @@ class Global2Local(object):
     
     def convert(self, points, Yaw_ego, X_ego, Y_ego):
         # Code
-            
+        self.GlobalPoints = points
+        for i in range(self.n):
+            dx = points[i][0] - X_ego
+            dy = points[i][1] - Y_ego
+            self.LocalPoints[i][0] =  dx * np.cos(Yaw_ego) + dy * np.sin(Yaw_ego)
+            self.LocalPoints[i][1] = -dx * np.sin(Yaw_ego) + dy * np.cos(Yaw_ego)
+
+
+# 3차 다항식으로 waypoint들을 local 경로로 근사
 class PolynomialFitting(object):
     def __init__(self, num_degree, num_points):
         self.nd = num_degree
@@ -19,8 +32,17 @@ class PolynomialFitting(object):
         self.coeff = np.zeros((num_degree+1,1))
         
     def fit(self, points):
-        # Code
+        for i in range(self.np):
+            x = points[i][0]
+            y = points[i][1]
+            for j in range(self.nd + 1):
+                self.A[i][j] = x ** (self.nd - j)
+            self.b[i][0] = y
+        self.coeff = np.linalg.pinv(self.A.T @ self.A) @ self.A.T @ self.b
 
+
+
+# 로컬 x 좌표들을 넣어서 y = f(x) 값을 계산하는 클래스 -> y 값을 계산해서 적절한 헤딩 앵글 추종값 계산
 class PolynomialValue(object):
     def __init__(self, num_degree, num_points):
         self.nd = num_degree
@@ -30,7 +52,11 @@ class PolynomialValue(object):
         self.points = np.zeros((self.np, 2))
         
     def calculate(self, coeff, x):
-        # Code
+        for i in range(self.np):
+            self.x = np.array([[x[i]**(self.nd - j) for j in range(self.nd + 1)]])
+            self.y[i] = self.x @ coeff
+            self.points[i][0] = x[i]
+            self.points[i][1] = self.y[i][0]
         
         
 if __name__ == "__main__":
