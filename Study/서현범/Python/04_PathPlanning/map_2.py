@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 def map():
     start = (10, 30)
     goal = (50, 30)

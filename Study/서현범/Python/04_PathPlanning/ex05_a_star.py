@@ -2,7 +2,7 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import random
-from map_2 import map
+from map_1 import map
 import heapq
 
 class Node:
@@ -48,7 +48,7 @@ def collision_check(omap, node):
     return False
 
 
-def a_star(start, goal, omap, weight=1.0):
+def a_star(start, goal, omap, weight=10.0):
     start_node = Node(None, start)
     goal_node = Node(None, goal)
     start_node.g = 0
