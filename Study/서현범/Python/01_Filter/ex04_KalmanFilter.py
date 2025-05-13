@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 class KalmanFilter:
-    def __init__(self, y_Measure_init, step_time = 0.1, m = 0.1, modelVariance = 0.01, measureVariance = 1.0, errorVariance_init = 10.0):
+    def __init__(self, y_Measure_init, step_time = 0.01, m = 0.1, modelVariance = 0.01, measureVariance = 1.0, errorVariance_init = 10.0):
         self.A = (1.0)
         self.B = step_time/m
         self.C = 1.0
@@ -23,7 +23,7 @@ class KalmanFilter:
     '''
     def estimate(self, y_measure, input_u):
         # Prediction
-        x_pred = self.A * self.x_estimate + self.B * input_u
+        x_pred = (self.A) * self.x_estimate + self.B * input_u
         P_pred = self.A * self.P_estimate * self.A + self.Q
         # Update
         K = P_pred * self.C / (self.C * P_pred * self.C + self.R)

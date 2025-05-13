@@ -4,23 +4,33 @@ from lane_1 import lane
 
 # Polynomial value calculation
 def Polyval(coeff, x):
-    # Code
-    return 0
-        
+    y = 0
+    for i, c in enumerate(coeff):
+        y += c * x**(len(coeff)-i-1)
+    return y
+
 # Global coordinate --> Local coordinate
 def Global2Local(global_points, yaw_ego, X_ego, Y_ego):
-    # Code
-    return 0
+    local_points = []
+    for x_g, y_g in global_points:
+        dx = x_g - X_ego
+        dy = y_g - Y_ego
+        x_l = np.cos(-yaw_ego) * dx - np.sin(-yaw_ego) * dy
+        y_l = np.sin(-yaw_ego) * dx + np.cos(-yaw_ego) * dy
+        local_points.append([x_l, y_l])
+    return local_points
         
 # Polynomial fitting (n_th order)
 def Polyfit(points, num_order):
-    # Code
-    return 0
+    x = [p[0] for p in points]
+    y = [p[1] for p in points]
+    return np.polyfit(x, y, num_order)
 
 # Both lane to path
 def BothLane2Path(coeff_L, coeff_R):
-    # Code
-    return 0
+    coeff_L = np.array(coeff_L)
+    coeff_R = np.array(coeff_R)
+    return (coeff_L + coeff_R) / 2.0
 
 # Vehicle model
 class VehicleModel_Lat(object):

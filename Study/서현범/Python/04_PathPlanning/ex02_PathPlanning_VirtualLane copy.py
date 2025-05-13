@@ -2,15 +2,65 @@ import numpy as np
 import matplotlib.pyplot as plt
 from lane_2 import lane
 from ex01_PathPlanning_BothLane import Global2Local, Polyfit, VehicleModel_Lat, PurePursuit
+prev_coeff_path = [0.0, 0.0, 0.0, 0.0]
+
 
 class LaneWidthEstimator(object):
     def __init__(self, Lw_init=3.0):
         self.Lw = Lw_init
-    # Code
+        self.valid = False  # 이번 frame에서 update 성공 여부
+
+    # 차폭 업데이트
+    def update(self, coeff_L, coeff_R, isLaneValid_L, isLaneValid_R):
+        self.valid = False
+
+        # 유효한 포인트 수가 충분한지 검사
+        min_valid_points = 5
+        
+        if (np.sum(isLaneValid_L) < min_valid_points) or (np.sum(isLaneValid_R) < min_valid_points):
+            return
+
+        mid_x = np.linspace(0.0, 5.0, num=10)
+        y_L = np.polyval(coeff_L, mid_x)
+        y_R = np.polyval(coeff_R, mid_x)
+
+        # NaN/Inf 제거
+        valid_mask = (
+            ~np.isnan(y_L) & ~np.isnan(y_R) & ~np.isinf(y_L) & ~np.isinf(y_R)
+        )
+        y_L = y_L[valid_mask]
+        y_R = y_R[ valid_mask]
+
+        if len(y_L) < 3:
+            return
+
+        lane_widths = np.abs(y_R - y_L)
+        mean_width = np.mean(lane_widths)
+
+        if 2.0 <= mean_width <= 5.0:
+            self.Lw = 0.9 * self.Lw + 0.1 * mean_width
+            self.valid = True
 
 def EitherLane2Path(coeff_L, coeff_R, isLaneValid_L, isLaneValid_R, Lw):
-    # Code
-    return 0
+    MIN_LANE_WIDTH = 2.5 
+    valid_L = np.sum(isLaneValid_L) >= 5
+    valid_R = np.sum(isLaneValid_R) >= 5
+
+
+    if valid_L and valid_R:
+        coeff = (np.array(coeff_L) + np.array(coeff_R)) / 2.0
+        return coeff
+    elif valid_L:
+        shifted_coeff = np.array(coeff_L, dtype=float)
+        shifted_coeff[-1] -= max(Lw, MIN_LANE_WIDTH) / 2.0
+        return shifted_coeff
+    elif valid_R:
+        shifted_coeff = np.array(coeff_R, dtype=float)
+        shifted_coeff[-1] += max(Lw, MIN_LANE_WIDTH) / 2.0
+        return shifted_coeff
+    else:
+        return None
+
         
 if __name__ == "__main__":
     step_time = 0.1
@@ -18,7 +68,7 @@ if __name__ == "__main__":
     Vx = 3.0
     X_lane = np.arange(0.0, 100.0, 0.1)
     Y_lane_L, Y_lane_R, Valid_L, Valid_R = lane(X_lane)
-    
+    print(f'Test:{np.sum([True,True,False])}')
     LaneWidth = LaneWidthEstimator()
     ego_vehicle = VehicleModel_Lat(step_time, Vx)
     controller = PurePursuit()
@@ -34,6 +84,7 @@ if __name__ == "__main__":
         # Lane Info
         X_ref = np.arange(ego_vehicle.X, ego_vehicle.X+5.0, 1.0)
         Y_ref_L, Y_ref_R, isLaneValid_L, isLaneValid_R = lane(X_ref)
+        #print(isLaneValid_L, isLaneValid_R)
         # Global points (front 5 meters from the ego vehicle)
         global_points_L = np.transpose(np.array([X_ref, Y_ref_L])).tolist()
         global_points_R = np.transpose(np.array([X_ref, Y_ref_R])).tolist()
@@ -46,6 +97,7 @@ if __name__ == "__main__":
         # Lane to path
         LaneWidth.update(coeff_L, coeff_R, isLaneValid_L, isLaneValid_R)
         coeff_path = EitherLane2Path(coeff_L, coeff_R, isLaneValid_L, isLaneValid_R, LaneWidth.Lw)
+        
         # Controller input
         controller.ControllerInput(coeff_path, Vx)
         ego_vehicle.update(controller.u, Vx)

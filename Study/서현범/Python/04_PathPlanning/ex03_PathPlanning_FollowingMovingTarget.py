@@ -2,20 +2,35 @@ import numpy as np
 import matplotlib.pyplot as plt
 from lane_1 import lane
 from ex01_PathPlanning_BothLane import Global2Local, Polyfit, Polyval, BothLane2Path,VehicleModel_Lat, PurePursuit
+# 차선 정보 없이 앞 차를 따라가면서 차선 정보를 추정하는 코드
+
 
 class LeadingVehiclePos(object):
+    '''추종할 차량의 위치를 PosArray 버퍼에 저장'''
     def __init__(self, num_data_store=5):
         self.max_num_array = num_data_store
-        self.PosArray = [] 
-    # Code
-    
-def HeadingAngleEstimation(coeff_path, PosArray):
-    # Code
-    return 0
+        self.PosArray = []
+
+    def update(self, pos_lead, Vx, yawrate, step_time):
+        # pos_lead: [[x, y]] 형태로 들어옴
+        if len(self.PosArray) >= self.max_num_array:
+            self.PosArray.pop(0) # 오래된 데이터는 제거하고
+        self.PosArray.append(pos_lead[0])  # [[x, y]] → [x, y] 형태로 저장
+
+
+
 
 def TargetFollowingPath(PosArray):
-    # Code
-    return 0
+    '''PosArray를 기준으로 3차 다항식 피팅하여 경로를 생성'''
+    if len(PosArray) < 2:
+        return [0.0, 0.0, 0.0, 0.0]  # 데이터 부족 시 평직선
+
+
+    # x = [p[0] for p in PosArray] # 이렇게 하면 x좌표가 불균등하게 나온다 -> 0 근처의 작은 값만 누적될 수 있음 -> 다항식 만들면 일직선 형태로 나와버림
+    x = np.linspace(0, 5, len(PosArray))  # 균등한 간격으로 x 생성
+    y = [p[1] for p in PosArray]  # lateral displacement만 사용
+    coeff = np.polyfit(x, y, 3)
+    return coeff
 
 if __name__ == "__main__":
     step_time = 0.1
@@ -55,6 +70,7 @@ if __name__ == "__main__":
         # Path for ego vehicle
         pos_lead = Global2Local([[leading_vehicle.X, leading_vehicle.Y]], ego_vehicle.Yaw, ego_vehicle.X, ego_vehicle.Y)
         # Code. Reference Code : leading_vehicle_pos.update(pos_lead, Vx, ego_vehicle.yawrate, step_time)
+        leading_vehicle_pos.update(pos_lead, Vx, ego_vehicle.yawrate, step_time)
         coeff_path_ego = TargetFollowingPath(leading_vehicle_pos.PosArray)
         # Controller input
         controller_lead.ControllerInput(coeff_path_lead, Vx)
