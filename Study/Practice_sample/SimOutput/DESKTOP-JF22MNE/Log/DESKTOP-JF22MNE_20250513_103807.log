@@ -1,0 +1,70 @@
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day1_scenario1	2025-05-13 10:40:54
+TIME	0.000
+SIMULATE	day1_scenario1
+
+TIME	29.801
+SIM_END		day1_scenario1	29.801s	495.342m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day1_scenario1	2025-05-13 10:46:27
+TIME	0.000
+SIMULATE	day1_scenario1
+
+TIME	29.801
+SIM_END		day1_scenario1	29.801s	495.342m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day1_scenario1	2025-05-13 10:48:17
+TIME	0.000
+SIMULATE	day1_scenario1
+
+TIME	20.936
+SIM_END		day1_scenario1	20.933s	347.589m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day1_scenario1	2025-05-13 10:49:04
+TIME	0.000
+SIMULATE	day1_scenario1
+
+TIME	5.121
+SIM_END		day1_scenario1	5.118s	84.4311m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day1_scenario1	2025-05-13 10:58:29
+TIME	0.000
+SIMULATE	day1_scenario1
+
+TIME	29.801
+SIM_END		day1_scenario1	29.801s	495.342m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day1_scenario1	2025-05-13 11:00:22
+TIME	0.000
+SIMULATE	day1_scenario1
+
+TIME	29.801
+SIM_END		day1_scenario1	29.801s	495.342m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day1_scenario1	2025-05-13 11:01:40
+TIME	0.000
+SIMULATE	day1_scenario1
+
+TIME	8.250
+SIM_END		day1_scenario1	8.247s	136.036m
