@@ -1,0 +1,162 @@
+function [x_path, y_path] = rrt_star_planner(map, startPose, goalPose)
+    %% 설정
+    visualize = false;      % true로 설정 시 그림 출력됨
+    maxIter        = 5000;
+    stepSize       = 2;
+    goalSampleRate = 0.1;
+    successDistTh  = 5;
+    collisionRes   = 0.5;
+    searchRadius   = 10;
+    safetyDist     = 5;
+
+    %% 입력 포맷 정규화
+    startPose = reshape(startPose, 1, []);
+    goalPose  = reshape(goalPose,  1, []);
+
+    %% 트리 초기화
+    nodes = struct('x', startPose(1), 'y', startPose(2), ...
+                   'parent', 0, 'cost', 0);
+
+    %% 경로 및 출력 초기화 (고정 크기)
+    path   = struct('x', {}, 'y', {}, 'parent', {}, 'cost', {});
+    x_path = zeros(maxIter, 1);
+    y_path = zeros(maxIter, 1);
+
+    %% RRT* 메인 루프
+    for iter = 1:maxIter
+        % 샘플링
+        if rand < goalSampleRate
+            xr = goalPose;
+        else
+            xr = [randi([1, size(map,2)]), randi([1, size(map,1)])];
+        end
+
+        % 가장 가까운 노드 찾기
+        [nearestIdx, nearXY] = findNearest(nodes, xr);
+        theta = atan2(xr(2)-nearXY(2), xr(1)-nearXY(1));
+        newXY = nearXY + stepSize * [cos(theta), sin(theta)];
+
+        % 충돌 검사
+        if isCollision(newXY, map) || ...
+           isPathCollision(nearXY, newXY, map, collisionRes) || ...
+           isNearObstacle(newXY, map, safetyDist)
+            continue;
+        end
+
+        % 주변 노드들 찾기
+        nearIdxs = findNearNodes(nodes, newXY, searchRadius);
+        nNear    = numel(nearIdxs);
+
+        % 1) 부모 선정 (최소 비용)
+        minCost   = nodes(nearestIdx).cost + norm(newXY - nearXY);
+        minParent = nearestIdx;
+        for idx = 1:nNear
+            iNode = nearIdxs(idx);
+            pxy   = [nodes(iNode).x, nodes(iNode).y];
+            if ~isPathCollision(pxy, newXY, map, collisionRes)
+                c = nodes(iNode).cost + norm(newXY - pxy);
+                if c < minCost
+                    minCost   = c;
+                    minParent = iNode;
+                end
+            end
+        end
+
+        % 새 노드 추가
+        newNode = struct('x', newXY(1), 'y', newXY(2), ...
+                         'parent', minParent, 'cost', minCost);
+        nodes(end+1) = newNode;
+        newIdx       = numel(nodes);
+
+        % 2) 리와이어링 (비용 개선)
+        for idx = 1:nNear
+            iNode = nearIdxs(idx);
+            pxy   = [nodes(iNode).x, nodes(iNode).y];
+            c     = newNode.cost + norm([newNode.x, newNode.y] - pxy);
+            if c < nodes(iNode).cost && ...
+               ~isPathCollision([newNode.x,newNode.y], pxy, map, collisionRes)
+                nodes(iNode).parent = newIdx;
+                nodes(iNode).cost   = c;
+            end
+        end
+
+        % 시각화 (옵션)
+        if visualize
+            plot([nodes(newNode.parent).x, newNode.x], ...
+                 [nodes(newNode.parent).y, newNode.y], '-r');
+            hold on;
+        end
+
+        % 목표 도달 검사
+        if norm(newXY - goalPose) < successDistTh
+            if visualize
+                disp('[-] GOAL REACHED');
+            end
+            path = backtrace(nodes, newIdx);
+            break;
+        end
+    end
+
+    %% 결과 경로 반환
+    nPath = numel(path);
+    if nPath > 0
+        for k = 1:nPath
+            x_path(k) = path(k).x;
+            y_path(k) = path(k).y;
+        end
+        % 나머지 요소들은 0으로 유지
+    end
+end
+
+%% ====== 헬퍼 함수들 ======
+
+function [idx, xy] = findNearest(nodes, sampleXY)
+    d = arrayfun(@(n) hypot(n.x - sampleXY(1), n.y - sampleXY(2)), nodes);
+    [~, idx] = min(d);
+    xy = [nodes(idx).x, nodes(idx).y];
+end
+
+function nearIdxs = findNearNodes(nodes, pos, radius)
+    mask = arrayfun(@(n) hypot(n.x - pos(1), n.y - pos(2)) <= radius, nodes);
+    nearIdxs = find(mask);
+end
+
+function flag = isCollision(pt, map)
+    x = round(pt(1)); y = round(pt(2));
+    flag = x < 1 || x > size(map,2) || y < 1 || y > size(map,1) || map(y,x) == 1;
+end
+
+function flag = isPathCollision(p1, p2, map, step)
+    dist = norm(p2 - p1);
+    N = max(1, ceil(dist / step));
+    flag = false;
+    for i = 0:N
+        pt = p1 + (p2 - p1) * (i / N);
+        if isCollision(pt, map)
+            flag = true; return;
+        end
+    end
+end
+
+function flag = isNearObstacle(pt, map, safeDist)
+    x0 = round(pt(1)); y0 = round(pt(2));
+    r  = ceil(safeDist);
+    [X, Y] = meshgrid((x0 - r):(x0 + r), (y0 - r):(y0 + r));
+    D2 = (X - pt(1)).^2 + (Y - pt(2)).^2;
+    mask = D2 <= safeDist^2;
+    X = X(mask); Y = Y(mask);
+    valid = X >= 1 & X <= size(map,2) & Y >= 1 & Y <= size(map,1);
+    flag  = any(map(sub2ind(size(map), Y(valid), X(valid))) == 1);
+end
+
+function path = backtrace(nodes, idx)
+    % 1) 부모 인덱스 수집
+    indices   = idx;
+    parentIdx = nodes(idx).parent;
+    while parentIdx ~= 0
+        indices   = [parentIdx, indices];
+        parentIdx = nodes(parentIdx).parent;
+    end
+    % 2) 한 번에 struct 배열 생성
+    path = nodes(indices);
+end
