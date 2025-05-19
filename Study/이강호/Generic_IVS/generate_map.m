@@ -1,0 +1,40 @@
+%% ======== generate_map_ ======== Ver 2025-05-17 10:40
+function mapMatrix = generate_map_(map_boundary, traffic_info, traffic_size)
+    %변수설정
+    resolution = 1;
+    x_values = map_boundary(1:2:end);
+    y_values = map_boundary(2:2:end);
+    N = size(traffic_info,1)
+    w = traffic_size(1);
+    h = traffic_size(2);
+    x_min = min(x_values);  x_max = max(x_values);
+    y_min = min(y_values);  y_max = max(y_values);
+    x_size = ceil((x_max-x_min)/resolution);
+    y_size = ceil((y_max-y_min)/resolution);
+    
+    
+    mapMatrix = zeros(y_size, x_size); %출력코드
+
+    if isempty(traffic_info) || isempty(traffic_size)
+        return;
+    end
+  
+    for i = 1:N
+        x_c = traffic_info(i,1);
+        y_c = traffic_info(i,2);
+        yaw = traffic_info(i,3);
+        
+        dx = w/2;  dy = h/2;
+        local = [-dx,-dy; dx,-dy; dx,dy; -dx,dy];
+        R = [cos(yaw), -sin(yaw); sin(yaw), cos(yaw)];
+        rotated = (R*local')';
+        forward_vec = [cos(yaw), sin(yaw)];
+        side_vec    = [-sin(yaw), cos(yaw)];
+        center = [x_c, y_c] + (w/2)*forward_vec - (h/2)*side_vec;
+        corners = rotated + center;
+        x_idx = (corners(:,1)-x_min)/resolution + 1;
+        y_idx = (y_max-corners(:,2))/resolution + 1;
+        mask = poly2mask(x_idx, y_idx, y_size, x_size);
+        mapMatrix(mask) = 1;
+    end
+end
