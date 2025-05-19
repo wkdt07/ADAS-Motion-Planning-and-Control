@@ -1,0 +1,76 @@
+function y = lateral_pid_controller_(CrossTrackError, Ego_XY, Traffic00, Traffic01, Traffic02, Ego_Vx, Target_Speed)
+% 입력:
+% CrossTrackError : 횡방향 오차
+% Ego_XY          : [ego_x; ego_y]
+% Traffic00~02    : [tx; ty; vx]
+% Ego_Vx          : 자차 속도
+% Target_Speed    : 목표 속도
+% 출력:
+% y(1): 조향각
+% y(2): 종방향 가속도 명령
+
+% ────────────── 횡방향 제어 (조향각) ──────────────
+cte = CrossTrackError;
+
+Kp_lat = 2.0;
+Ki_lat = 0.5;
+Kd_lat = 1.0;
+dt     = 0.001;
+
+persistent int_e prev_e
+if isempty(int_e)
+    int_e = 0;
+    prev_e = 0;
+end
+
+if abs(cte) > 0.5
+    int_e = int_e + cte * dt;
+    d_e = (cte - prev_e) / dt;
+    steer = Kp_lat * cte + Ki_lat * int_e + Kd_lat * d_e;
+    steer = -steer;
+    steer = max(min(steer, 0.5), -0.5);
+else
+    steer = 0;
+end
+prev_e = cte;
+
+% ────────────── 종방향 제어 (가속도) ──────────────
+ego_x = Ego_XY(1);
+ego_y = Ego_XY(2);
+
+tx0 = Traffic00(1); ty0 = Traffic00(2); vx0 = Traffic00(3);
+tx1 = Traffic01(1); ty1 = Traffic01(2); vx1 = Traffic01(3);
+tx2 = Traffic02(1); ty2 = Traffic02(2); vx2 = Traffic02(3);
+
+d0 = sqrt((tx0 - ego_x)^2 + (ty0 - ego_y)^2);
+d1 = sqrt((tx1 - ego_x)^2 + (ty1 - ego_y)^2);
+d2 = sqrt((tx2 - ego_x)^2 + (ty2 - ego_y)^2);
+
+[min_dist, idx] = min([d0, d1, d2]);
+vx_list = [vx0, vx1, vx2];
+target_v = vx_list(idx);
+
+if min_dist < 25
+    v_ref = target_v;
+else
+    v_ref = Target_Speed;
+end
+
+Kp_long = 3.0;
+Kd_long = 0.5;
+
+persistent prev_err
+if isempty(prev_err)
+    prev_err = 0;
+end
+
+err = v_ref - Ego_Vx;
+derr = (err - prev_err) / dt;
+accel = Kp_long * err + Kd_long * derr;
+accel = max(min(accel, 3.0), -5.0);
+prev_err = err;
+
+% ────────────── 출력 결합 ──────────────
+y = [steer; accel];
+
+end
