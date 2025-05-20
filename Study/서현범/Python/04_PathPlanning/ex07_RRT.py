@@ -35,10 +35,10 @@ class RRT(object):
         for i in range(self.max_iter):
             # Get random node
             rand_node = self.get_random_node()
-            # Find neareast node
+            # Find nearest node
             nearest_node = self.find_nearest_node(self.node_list, rand_node)
             # Create new node
-            u = self.stepsize*self.get_random_input(self.min_u, self.max_u)
+            u = self.stepsize * self.get_random_input(self.min_u, self.max_u)
             new_node = self.create_child_node(nearest_node, rand_node, u)
             # Collision check(Node, Path)
             node_collide = self.is_collide(new_node, self.obstalce_list)
@@ -51,8 +51,7 @@ class RRT(object):
             new_node.set_parent(nearest_node)
             self.node_list.append(new_node)
             # Goal check
-            goal_reached = self.check_goal(
-                new_node, self.success_dist_thres)
+            goal_reached = self.check_goal(new_node, self.success_dist_thres)
             if goal_reached:
                 print(" [-] GOAL REACHED")
                 return self.backtrace_path(new_node)
@@ -60,8 +59,8 @@ class RRT(object):
 
     @staticmethod
     def is_same_node(node1, node2):
-        # Code
-        return False
+        # Return True if both nodes are at the same position
+        return node1.x == node2.x and node1.y == node2.y
 
     def backtrace_path(self, node):
         current_node = node
@@ -70,46 +69,68 @@ class RRT(object):
         while not reached_start_node:
             current_node = current_node.parent
             path.append(current_node)
-            reached_start_node = self.is_same_node(
-                current_node, self.start_node)
+            reached_start_node = self.is_same_node(current_node, self.start_node)
         return path[::-1]
 
     def get_random_node(self):
-        # Code
-        # Recommendation : set random node as goal node occasionally
-        if 1:
-            return rand_node
+        # Occasionally set random node as goal node
+        if np.random.rand() > self.goal_sample_rate:
+            rand_x = np.random.uniform(self.space[0], self.space[1])
+            rand_y = np.random.uniform(self.space[2], self.space[3])
+            return Node(rand_x, rand_y)
         else:
             return self.goal_node
 
     def check_goal(self, node, success_dist_thres):
-        # Code
-        return False
+        # Check if the node is within the success distance threshold from goal
+        dist = np.sqrt((node.x - self.goal_node.x)**2 + (node.y - self.goal_node.y)**2)
+        return dist <= success_dist_thres
 
     @staticmethod
     def create_child_node(nearest_node, rand_node, u):
-        # Code
-        new_node = Node(new_x, new_y)
-        return new_node
+        # Create new node based on the nearest node, random node, and control input u
+        angle = np.arctan2(rand_node.y - nearest_node.y, rand_node.x - nearest_node.x)
+        new_x = nearest_node.x + u * np.cos(angle)
+        new_y = nearest_node.y + u * np.sin(angle)
+        return Node(new_x, new_y)
 
     @staticmethod
     def get_random_input(min_u, max_u):
-        # Code
+        # Random input control in the range [min_u, max_u]
         return np.random.uniform(min_u, max_u)
 
     @staticmethod
     def find_nearest_node(node_list, rand_node):
-        # Code
-        return node_list[min_index]
+        # Find the nearest node from the node list to the random node
+        min_dist = float("inf")
+        nearest_node = None
+        for node in node_list:
+            dist = np.sqrt((node.x - rand_node.x)**2 + (node.y - rand_node.y)**2)
+            if dist < min_dist:
+                min_dist = dist
+                nearest_node = node
+        return nearest_node
 
     @staticmethod
     def is_collide(node, obstacle_list):
-        # Code
+        # Check if the node collides with any obstacle
+        for (ox, oy, r) in obstacle_list:
+            dist = np.sqrt((node.x - ox)**2 + (node.y - oy)**2)
+            if dist <= r:
+                return True
         return False
 
     @staticmethod
     def is_path_collide(node_from, node_to, obstacle_list, check_step=0.2):
-        # Code
+        # Check if the path between node_from and node_to collides with any obstacle
+        steps = int(np.linalg.norm([node_from.x - node_to.x, node_from.y - node_to.y]) / check_step)
+        for i in range(steps):
+            x = node_from.x + (node_to.x - node_from.x) * (i / steps)
+            y = node_from.y + (node_to.y - node_from.y) * (i / steps)
+            for (ox, oy, r) in obstacle_list:
+                dist = np.sqrt((x - ox)**2 + (y - oy)**2)
+                if dist <= r:
+                    return True
         return False
 
 

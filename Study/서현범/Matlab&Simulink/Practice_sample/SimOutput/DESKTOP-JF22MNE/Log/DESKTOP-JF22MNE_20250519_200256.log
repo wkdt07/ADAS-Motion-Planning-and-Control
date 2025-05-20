@@ -1,0 +1,19 @@
+APPLICATION	CarMaker 14.0.1 - Car_Generic #4 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:39
+ 
+		I/O Configuration: default
+FIRST_INIT	(internal default used)	2025-05-19 20:02:56
+TIME	0.000
+SIM_END			0s	0m
+IDLE	20:02:56
+SIM_START	day7_final	2025-05-19 20:02:57
+TIME	0.088
+		Current random seed value = 1747652577
+TIME	0.000
+SIMULATE	day7_final
+
+TIME	1050.683
+SIM_END		day7_final	1050.68s	0.00386587m
+TIME	1934.663
+SHUTDOWN	CarMaker quick shutdown initiated
+

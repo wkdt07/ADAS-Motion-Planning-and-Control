@@ -1,0 +1,153 @@
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day7_final	2025-05-20 10:30:16
+TIME	0.001
+		Current random seed value = 1747704616
+TIME	0.000
+SIMULATE	day7_final
+
+TIME	26.664
+SIM_END		day7_final	26.661s	1.4483e-05m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day7_final	2025-05-20 10:34:14
+TIME	0.001
+		Current random seed value = 1747704854
+TIME	0.000
+SIMULATE	day7_final
+
+SIM_END		day7_final	0s	0m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day7_final	2025-05-20 10:35:43
+TIME	0.001
+		Current random seed value = 1747704943
+TIME	0.000
+SIMULATE	day7_final
+
+SIM_END		day7_final	0s	0m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day7_final	2025-05-20 10:36:04
+TIME	0.001
+		Current random seed value = 1747704964
+TIME	0.000
+SIMULATE	day7_final
+
+SIM_END		day7_final	0s	0m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day7_final	2025-05-20 10:36:19
+TIME	0.001
+		Current random seed value = 1747704979
+TIME	0.000
+SIMULATE	day7_final
+
+TIME	338.285
+SIM_END		day7_final	338.282s	0.000650221m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day7_final	2025-05-20 10:38:17
+TIME	0.001
+		Current random seed value = 1747705097
+TIME	0.000
+SIMULATE	day7_final
+
+TIME	242.837
+SIM_END		day7_final	242.834s	0.000390658m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day7_final	2025-05-20 11:25:50
+TIME	0.001
+		Current random seed value = 1747707950
+TIME	0.000
+SIMULATE	day7_final
+
+SIM_END		day7_final	0s	0m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day7_final	2025-05-20 11:51:51
+TIME	0.001
+		Current random seed value = 1747709511
+TIME	0.000
+SIMULATE	day7_final
+
+TIME	98.806
+SIM_END		day7_final	98.803s	9.28863e-05m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+		DVA read: Unknown quantity 'AccelCtrl.DesiredAx'
+SIM_START	day7_final	2025-05-20 11:52:47
+TIME	0.001
+		Current random seed value = 1747709567
+TIME	0.000
+SIMULATE	day7_final
+
+TIME	124.421
+SIM_END		day7_final	124.418s	0.000134905m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day7_final	2025-05-20 12:13:40
+TIME	0.001
+		Current random seed value = 1747710820
+TIME	0.000
+SIMULATE	day7_final
+
+TIME	520.156
+SIM_END		day7_final	520.153s	0.0012577m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day7_final	2025-05-20 12:17:37
+TIME	0.001
+		Current random seed value = 1747711057
+TIME	0.000
+SIMULATE	day7_final
+
+TIME	13.155
+SIM_END		day7_final	13.152s	7.8953e-06m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day7_final	2025-05-20 12:18:57
+TIME	0.001
+		Current random seed value = 1747711137
+TIME	0.000
+SIMULATE	day7_final
+
+TIME	26.301
+SIM_END		day7_final	26.298s	1.42688e-05m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day7_final	2025-05-20 12:19:38
+TIME	0.001
+		Current random seed value = 1747711178
+TIME	0.000
+SIMULATE	day7_final
+
+TIME	21.652
+SIM_END		day7_final	21.649s	1.17053e-05m

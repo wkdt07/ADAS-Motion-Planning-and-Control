@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 def map():
     # Start, goal : [x, y, theta]
     start = [10.0, 0.0, np.pi]
-    goal = [10.0, 10.0, 0.0]
+    goal = [10.0, 10.0, np.pi/2]
     # Searching space : [min_x, max_x, min_y, max_y]
     space = [-2.0, 15.0, -2.0, 15.0]  
     # Obstacle : (x, y, radius)

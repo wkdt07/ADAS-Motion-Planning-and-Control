@@ -14,18 +14,47 @@ class RRTStar(object):
     # Random point generation
     def sample_free(self, obstacles, space):
         min_x, max_x, min_y, max_y = space
-        # Code
-        return np.array([rand_x, rand_y])
+        while True:
+            rand_x = np.random.uniform(min_x, max_x)
+            rand_y = np.random.uniform(min_y, max_y)
+            
+            collision_free = True
+            for obs in obstacles:
+                ox, oy, r = obs.x, obs.y, obs.r
+                if np.hypot(rand_x - ox, rand_y - oy) <= r:
+                    collision_free = False
+                    break
+            if collision_free:
+                return np.array([rand_x, rand_y])
+
+
+
+
 
     # Search nearest node
     def get_nearest(self, rand_node):
-        # Code
+        min_dist = float("inf")
+        nearest_node_id = -1
+        for node_id in self.G.nodes:
+            node = self.G.nodes[node_id]
+            dist = np.hypot(rand_node[0] - node['x'], rand_node[1] - node['y'])
+            if dist < min_dist:
+                min_dist = dist
+                nearest_node_id = node_id
         return nearest_node_id
+
+
 
     # Node connection
     def steer(self, node_from, node_to, u=None):
-        # Code
-        return new_x, new_y
+        direction = np.array([node_to[0] - node_from[0], node_to[1] - node_from[1]])
+        length = np.linalg.norm(direction)
+        direction = direction / length  # Normalizing the direction
+        new_x = node_from[0] + self.config["eta"] * direction[0]
+        new_y = node_from[1] + self.config["eta"] * direction[1]
+        return np.array([new_x, new_y])
+
+
 
     # Returns node(2d-array with position info.) corresponding to the node id
     def get_node(self, node_id):
@@ -34,16 +63,36 @@ class RRTStar(object):
 
     # Collision Check
     def is_collision_free(self, node_from, node_to, obstacles, step=0.2):
-        # Code
-        # Collision check step size : u
-        # Collision check : path(connection) between 2 nodess
-        return False
+    # 두 노드 사이의 경로가 장애물과 충돌하는지 체크
+        distance = np.hypot(node_to[0] - node_from[0], node_to[1] - node_from[1])
+        num_steps = int(distance / step)
+        
+        for i in range(num_steps + 1):
+            # 새로운 위치를 계산
+            x = node_from[0] + i * step * (node_to[0] - node_from[0]) / distance
+            y = node_from[1] + i * step * (node_to[1] - node_from[1]) / distance
+            # 각 장애물에 대해 충돌 여부를 체크
+            for obs in obstacles:
+                ox, oy, r = obs.x, obs.y, obs.r  # 장애물 객체의 속성에 접근
+                if np.hypot(x - ox, y - oy) <= r:
+                    return False  # 충돌 시 False 반환
+        return True  # 충돌하지 않으면 True
+
+
 
     # Find adjacent nodes
     def get_near_node_ids(self, new_node, draw):
-        # Code
-        # Recommendation : Searching distance proportional to log(# of nodes in tree)/(# of nodes in tree)
+        near_node_ids = []
+        # 검색 범위 계산: 트리의 크기와 로그에 비례
+        search_radius = self.config["gamma_rrt_star"] * np.sqrt(np.log(len(self.G.nodes)) / len(self.G.nodes))
+        
+        for node_id in self.G.nodes:
+            node = self.G.nodes[node_id]
+            dist = np.hypot(new_node[0] - node['x'], new_node[1] - node['y'])
+            if dist < search_radius:
+                near_node_ids.append(node_id)
         return near_node_ids
+
 
     # Add node to tree
     def add_node(self, node_id, x, y):
@@ -55,8 +104,11 @@ class RRTStar(object):
 
     # Calculate the distance between 2 nodes
     def get_distance(self, node_from_id, node_to_id):
-        # Code
+        node_from = self.G.nodes[node_from_id]
+        node_to = self.G.nodes[node_to_id]
+        dist = np.hypot(node_to['x'] - node_from['x'], node_to['y'] - node_from['y'])
         return dist
+
 
     # Add edge(Connection) between 2 nodes
     def add_edge(self, node_from_id, node_to_id):
