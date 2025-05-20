@@ -1,0 +1,28 @@
+ lambda = 5.0;  % 감쇠율
+    yaw_obs_now = yaw_obs1;
+    yaw_rate_obs = (yaw_obs_now - yaw_obs_prev) / dt;
+    yaw_obs_prev = yaw_obs_now;
+    
+    x_ctrv = zeros(1, N+1); x_ctrv(1) = x_obs1;
+    y_ctrv = zeros(1, N+1); y_ctrv(1) = y_obs1;
+    yaw_ctrv = zeros(1, N+1); yaw_ctrv(1) = yaw_obs1;
+    
+    for k = 1:N
+        t_k = k * dt;
+        yaw_rate_damped = yaw_rate_obs * exp(-lambda * t_k);
+    
+        if abs(yaw_rate_damped) > 1e-3
+            x_ctrv(k+1) = x_ctrv(k) + v_obs1/yaw_rate_damped * ...
+                (sin(yaw_ctrv(k) + yaw_rate_damped*dt) - sin(yaw_ctrv(k)));
+            y_ctrv(k+1) = y_ctrv(k) + v_obs1/yaw_rate_damped * ...
+                (-cos(yaw_ctrv(k) + yaw_rate_damped*dt) + cos(yaw_ctrv(k)));
+        else
+            x_ctrv(k+1) = x_ctrv(k) + v_obs1 * cos(yaw_ctrv(k)) * dt;
+            y_ctrv(k+1) = y_ctrv(k) + v_obs1 * sin(yaw_ctrv(k)) * dt;
+        end
+    
+        yaw_ctrv(k+1) = yaw_ctrv(k) + yaw_rate_damped * dt;
+    end
+    
+    pred_plot3= plot(x_ctrv, y_ctrv, 'b--', 'LineWidth', 2);
+    
