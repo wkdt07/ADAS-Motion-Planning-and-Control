@@ -4,15 +4,19 @@
 % 장애물 파라미터
 obstacle_length = 4;
 obstacle_width = 2;
-s_obs1 = 10;      % 차량 경로 시작점과 유사한 위치에서 시작
-s_obs2 = 1000;        % 출발점 s좌표 (둘 다 같게 or 다르게)
-s_obs3 = 100;
-v_obs1 = 0.5;        % 속도 (둘 다 같게 or 다르게)
-v_obs2 = 0.5;        % 속도 (둘 다 같게 or 다르게)
-v_obs3 = 0.4;
+
+s_obs1_init = 10;      % 차량 경로 시작점과 유사한 위치에서 시작
+s_obs2_init = 1000;        % 출발점 s좌표 (둘 다 같게 or 다르게)
+s_obs3_init = 100;
+
+v_obs1 = 60.0;        % 속도 (둘 다 같게 or 다르게)
+v_obs2 = 50.0;        % 속도 (둘 다 같게 or 다르게)
+v_obs3 = 40.0;
+
 d_obs1 = 0;         % 중앙 차선
 d_obs2 = 6; % 왼쪽 차선 (+3)
 d_obs3 = -6;
+yaw_obs_prev = 0;
 %% 
 
 
@@ -40,7 +44,7 @@ xlabel('X 좌표'); ylabel('Y 좌표');
 title('Frenet 기반 궤적 후보 + 최적 경로 선택');
 set(gca, 'FontSize', 12);
 hold on;
-
+% 거시적 관점, 인피니트 관점 코스트,
 plot(route1_waypoint_raw(:,1), route1_waypoint_raw(:,2), 'b-', 'LineWidth', 1.5);
 plot(route2_waypoint_raw(:,1), route2_waypoint_raw(:,2), 'r-', 'LineWidth', 2);
 plot(route3_waypoint_raw(:,1), route3_waypoint_raw(:,2), 'y-', 'LineWidth', 1.5);
@@ -50,17 +54,21 @@ car_plot = []; dot_plot = []; traj_plots = []; best_traj_plot = [];
 for i = 1:3:length(x_path)
     cx = x_path(i);
     cy = y_path(i);
-
+    T = 3;
+    t_sample = linspace(0, T, 60);
 
 
      % ==== 장애물 위치 계산 및 plot ====
-    t_now = (i-1)/3 * 0.05;
-    s_obs1 = s_obs1 + v_obs1 * t_now;
-    s_obs2 = s_obs2 + v_obs2 * t_now;
-    s_obs3 = s_obs3 + v_obs3 * t_now;
+    t_now = (i-1)/3 * 0.05; %현재 시간
+
+    s_obs1 = s_obs1_init + v_obs1 * t_now;
+    s_obs2 = s_obs2_init + v_obs2 * t_now;
+    s_obs3 = s_obs3_init + v_obs3 * t_now;
+
     [x_obs1, y_obs1, yaw_obs1] = get_cartesian(s_obs1, d_obs1, x_path, y_path, s_ref);
     [x_obs2, y_obs2, yaw_obs2] = get_cartesian(s_obs2, d_obs2, x_path, y_path, s_ref);
     [x_obs3, y_obs3, yaw_obs3] = get_cartesian(s_obs3, d_obs3, x_path, y_path, s_ref);
+    % fprintf("yaw_obs1 = %.2f\n", yaw_obs1);
      % 중앙 차선 장애물 사각형
     R1 = [cos(yaw_obs1), -sin(yaw_obs1); sin(yaw_obs1), cos(yaw_obs1)];
     rect1 = [-obstacle_length/2, obstacle_length/2, obstacle_length/2, -obstacle_length/2;
@@ -100,13 +108,79 @@ for i = 1:3:length(x_path)
             delete(obstacle_plot3);
         end
     end
-    
+    if exist('pred_plot1','var')
+        if ishandle(pred_plot1)
+            delete(pred_plot1);
+        end
+    end
+    if exist('pred_plot2','var')
+        if ishandle(pred_plot2)
+            delete(pred_plot2);
+        end
+    end
+    if exist('pred_plot3','var')
+        if ishandle(pred_plot3)
+            delete(pred_plot3);
+        end
+    end
     % 장애물 시각화 (색깔 다르게)
-    obstacle_plot1 = fill(rect_rot1(1,:), rect_rot1(2,:), 'red');
+    obstacle_plot1 = fill(rect_rot1(1,:), rect_rot1(2,:), 'blue');
     obstacle_plot2 = fill(rect_rot2(1,:), rect_rot2(2,:), 'magenta');
     obstacle_plot3 = fill(rect_rot3(1,:), rect_rot3(2,:), 'black');
 
+    % === 장애물 1 예측 궤적 (CV 모델) ===
+    vx_obs1 = v_obs1 * cos(yaw_obs1);  % 현재 진행방향 기준 속도 벡터
+    vy_obs1 = v_obs1 * sin(yaw_obs1);
+    % 3. CV 예측 (x, y = x0 + vx * t, y0 + vy * t)
+    x_cv_pred1 = x_obs1 + vx_obs1 * t_sample;
+    y_cv_pred1 = y_obs1 + vy_obs1 * t_sample;
+    
+    pred_plot1=plot(x_cv_pred1, y_cv_pred1, 'k--', 'LineWidth', 2);
+    % 2번 장애물 예측궤적
+    vx_obs2 = v_obs2 * cos(yaw_obs2);  % 현재 진행방향 기준 속도 벡터
+    vy_obs2 = v_obs2 * sin(yaw_obs2);
+    % 3. CV 예측 (x, y = x0 + vx * t, y0 + vy * t)
+    x_cv_pred2 = x_obs2 + vx_obs2 * t_sample;
+    y_cv_pred2 = y_obs2 + vy_obs2 * t_sample;
+    
+    pred_plot2=plot(x_cv_pred2, y_cv_pred2, 'k--', 'LineWidth', 2);
 
+    
+    % 예측 시간축
+    dt = t_sample(2) - t_sample(1);
+    N = length(t_sample);
+    
+    % 상태 변수 저장
+
+    yaw_obs_now = yaw_obs1;
+    yaw_rate_obs = (yaw_obs_now - yaw_obs_prev) / dt;
+    fprintf("yaw_rate_obs : %.2f\n", yaw_rate_obs);
+    yaw_obs_prev = yaw_obs_now;  % 다음 프레임에 갱신
+    x_ctrv = zeros(1, N+1);
+    x_ctrv(1) = x_obs1;
+    
+    y_ctrv = zeros(1, N+1);
+    y_ctrv(1) = y_obs1;
+    yaw_ctrv = zeros(1, N+1);
+    yaw_ctrv(1) = yaw_obs1;
+    % yaw_rate_damped = yaw_rate_obs * exp(-3 * dt);
+    for k = 1:N
+        t_k = k * dt;
+        yaw_rate_damped = yaw_rate_obs * exp(-5 * t_k);
+
+        if abs(yaw_rate_damped) > 1  % yaw_rate가 충분히 크면
+            x_ctrv(k+1) = x_ctrv(k) + v_obs1/yaw_rate_damped * (sin(yaw_ctrv(k) + yaw_rate_damped*dt) - sin(yaw_ctrv(k)));
+            y_ctrv(k+1) = y_ctrv(k) + v_obs1/yaw_rate_damped * (-cos(yaw_ctrv(k) + yaw_rate_damped*dt) + cos(yaw_ctrv(k)));
+        else
+            % yaw_rate가 거의 0이면 CV 모델로 근사
+            x_ctrv(k+1) = x_ctrv(k) + v_obs1 * cos(yaw_ctrv(k)) * dt;
+            y_ctrv(k+1) = y_ctrv(k) + v_obs1 * sin(yaw_ctrv(k)) * dt;
+        end
+        yaw_ctrv(k+1) = yaw_ctrv(k) + yaw_rate_damped * dt;
+    end
+    
+    pred_plot3 = plot(x_ctrv, y_ctrv, 'b--', 'LineWidth', 2);
+    
     % 이전 궤적/차량 삭제
     if exist('traj_plots', 'var')
         for p = traj_plots
@@ -128,10 +202,9 @@ for i = 1:3:length(x_path)
 
     [s0, d0] = get_frenet(cx, cy, x_path, y_path);
     [~, ~, yaw] = get_cartesian(s0, d0, x_path, y_path, s_ref);
-
+    % fprintf("yaw : %.2f\n", yaw);
     lateral_offsets = linspace(-2*LANE_WIDTH, 2*LANE_WIDTH, 11);
-    T = 3;
-    t_sample = linspace(0, T, 60);
+
 
     % s(t): 종방향 quartic
     s0_d = 6.0; s0_dd = 0.0;
