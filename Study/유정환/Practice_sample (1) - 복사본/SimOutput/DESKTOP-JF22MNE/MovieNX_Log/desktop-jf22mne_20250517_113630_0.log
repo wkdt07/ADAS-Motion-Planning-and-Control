@@ -1,0 +1,19 @@
+
+
+SYSTEM_START	-	desktop-jf22mne	토 5 17 11:36:30 2025
+
+
+SYSTEM_INFO	Movie NX pro 14.0.1 2025-01-27
+APO: Successfully connected to: CarMaker 14.0.1 - Car_Generic @ DESKTOP-JF22MNE(127.0.0.1):17820
+Using RenderSettingsProfile: RenderSettings_high.cfg -> template_high.render
+Loading Installed scripts...
+Loading User scripts...
+ApoConnection: Disconnecting...
+Loading Test Run from path D:/IVS_3/28. 자율주행 ADAS motion planning and control/플젝/Practice_sample (1)/Data/TestRun/.tmp_preview
+ApoConnection: Disconnecting...
+APO: Successfully connected to: CarMaker 14.0.1 - Car_Generic @ DESKTOP-JF22MNE(127.0.0.1):17820
+Loaded Path Mapping with 0 mapped directories. Set CarMaker home dir to 'C:/IPG/carmaker/win64-14.0.1'
+Loading Test Run from path D:/IVS_3/28. 자율주행 ADAS motion planning and control/플젝/Practice_sample (1)/Data/TestRun/day6_scenario1
+[Warning] Timeout while waiting for initial simulation data
+ApoConnection: Disconnecting...
+ApoConnection: Disconnecting...

@@ -1,0 +1,13 @@
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	day6_scenario1	2025-05-17 11:37:51
+TIME	0.001
+		Current random seed value = 1747449471
+TIME	0.000
+SIMULATE	day6_scenario1
+
+TIME	69.221
+ERROR		Vehicle leaves road at about x=-56.9555, y=-89.3137 TireNo=1
+SIM_ABORT	day6_scenario1	69.224s	757.589m
