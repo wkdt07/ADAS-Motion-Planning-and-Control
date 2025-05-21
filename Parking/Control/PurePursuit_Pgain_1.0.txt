@@ -1,0 +1,107 @@
+function [steering_angle, speed, x_local, y_local] = ...
+    global_to_local_waypoints(waypoints_x, waypoints_y, ...
+                              X_ego, Y_ego, head, goal_pose)
+%#codegen
+% 글로벌 웨이포인트 → 로컬 좌표 변환 + 조향각 계산 (Pure Pursuit)
+% 후방 포인트는 무시하며, 초기에는 아무 유효 포인트 없을 수 있음
+
+    %% 파라미터
+    L = 4.0;               % 휠베이스
+    epsilon = 1e-3;        % 안정화용
+    lookahead_dist = 1.0;  % 추적 기준 거리
+    stop_threshold = 4.5;  % 완전 정지 거리
+    heading_align_threshold = 10.0;  % 헤딩 조정 시작 거리
+    x_local = 0.0;
+    y_local = 0.0;
+
+    %% 초기값 설정 (모든 실행 경로 보장)
+    local_point = [0 0];
+    dist = 0;
+    idx_closest = 1;
+    steering_angle = 0;
+    goal_dist = norm([X_ego - goal_pose(1), Y_ego - goal_pose(2)])
+    
+    %% 정지 조건
+    if goal_dist < stop_threshold
+        speed = 0;
+        steering_angle = 0;
+        return;
+    end
+
+    %% 헤딩 정렬 조건 적용
+    if goal_dist < heading_align_threshold
+        heading_error = wrapToPi(pi/2 - head);  % 90도 방향으로 정렬
+        steering_angle = atan2(2 * L * sin(heading_error), goal_dist + epsilon);
+        speed = 3;
+        % 이 부분에서 
+        return;
+    end
+
+    %% 1) NaN 제거
+    valid_idx = ~isnan(waypoints_x) & ~isnan(waypoints_y);
+    x_wp = waypoints_x(valid_idx);
+    y_wp = waypoints_y(valid_idx);
+    N = numel(x_wp);
+
+    if N == 0
+        speed = 0;
+        return;
+    end
+
+    %% 2) 차량 기준 상대 위치 계산
+    dx_all = x_wp(:)' - X_ego;
+    dy_all = y_wp(:)' - Y_ego;
+
+    %% 3) 차량 전방 필터
+    forward_vec = [cos(head); sin(head)];
+    rel_pos = [dx_all; dy_all];
+    dot_products = forward_vec' * rel_pos;
+    is_in_front = dot_products > 0;
+
+    %% 4) 전방 포인트가 없다면: 정지 상태 유지
+    if ~any(is_in_front)
+        speed = 0;
+        return;
+    end
+
+    %% 5) 가장 가까운 전방 인덱스 찾기
+    d2_all = dx_all.^2 + dy_all.^2;
+    d2_all(~is_in_front) = Inf;
+    [~, idx_closest] = min(d2_all);
+
+    %% 6) 전체 로컬 좌표 변환
+    c = cos(-head); s = sin(-head);
+    R = [c, -s; s, c];
+    rel_global = [x_wp - X_ego, y_wp - Y_ego]';
+    local_wp = R * rel_global;       % 2×N
+    Local_Waypoints = local_wp';     % Nx2
+    local_point = Local_Waypoints(idx_closest, :);
+    dist = sqrt(d2_all(idx_closest));
+    x_local = local_point(1);
+    y_local = local_point(2);
+
+    %% 7) 추적 포인트 찾기 (lookahead 거리 기준)
+    target_idx = idx_closest;
+    for i = idx_closest+1:N
+        d = norm(Local_Waypoints(i,:) - Local_Waypoints(idx_closest,:));
+        if d > lookahead_dist
+            target_idx = i;
+            break;
+        end
+    end
+
+    %% 8) 조향각 계산 (Pure Pursuit)
+    x_t = Local_Waypoints(target_idx, 1);
+    y_t = Local_Waypoints(target_idx, 2);
+    L_d = sqrt(x_t^2 + y_t^2 + epsilon);
+    alpha = atan2(y_t, x_t);
+    steering_angle = atan2(2 * L * sin(alpha), L_d);
+
+    %% 9) 속도 설정
+    speed = 3;
+end
+
+%% ===== 각도 wrap =====
+function angle = wrapToPi(theta)
+    angle = mod(theta + pi, 2*pi) - pi;
+end
