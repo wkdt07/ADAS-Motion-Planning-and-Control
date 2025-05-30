@@ -1,0 +1,102 @@
+function [steering_angle, speed, x_local, y_local] = ...
+    global_to_local_waypoints(waypoints_x, waypoints_y, ...
+                              X_ego, Y_ego, head, goal_pose)
+%#codegen
+
+    %% 파라미터
+    L = 4.0;               % 휠베이스
+    epsilon = 1e-3;        % 안정화용
+    stop_threshold = 4.5;
+    heading_align_threshold = 10.0;
+    K_stanley = 1.0;       % Stanley 제어용 CTE 이득
+    K_cte = 1.5;           % CTE 기반 속도 감속 계수
+    v_base = 3.0;          % 기본 속도 [m/s]
+    v_min = 1.5;           % 최소 속도
+    v_max = 5.0;           % 최대 속도
+
+    %% 출력 초기화
+    x_local = 0.0;
+    y_local = 0.0;
+    steering_angle = 0;
+    speed = v_base;
+
+    %% 목표점까지 거리 계산
+    goal_dist = norm([X_ego - goal_pose(1), Y_ego - goal_pose(2)]);
+
+    %% 1) 정지 조건
+    if goal_dist < stop_threshold
+        speed = 0;
+        steering_angle = 0;
+        return;
+    end
+
+    %% 2) 헤딩 정렬 조건
+    if goal_dist < heading_align_threshold
+        heading_error = wrapToPi(pi/2 - head);  % 90도 방향으로 정렬
+        steering_angle = atan2(2 * L * sin(heading_error), goal_dist + epsilon);
+        speed = 3;
+        % 이 부분에서 
+        return;
+    end
+   
+
+    %% 3) 유효한 웨이포인트 필터링
+    valid_idx = ~isnan(waypoints_x) & ~isnan(waypoints_y);
+    x_wp = waypoints_x(valid_idx);
+    y_wp = waypoints_y(valid_idx);
+    N = numel(x_wp);
+    if N == 0
+        speed = 0;
+        return;
+    end
+
+    %% 4) 차량 기준 상대 위치 계산
+    dx_all = x_wp(:)' - X_ego;
+    dy_all = y_wp(:)' - Y_ego;
+
+    %% 5) 전방 포인트 필터링
+    forward_vec = [cos(head); sin(head)];
+    rel_pos = [dx_all; dy_all];
+    dot_products = forward_vec' * rel_pos;
+    is_in_front = dot_products > 0;
+    if ~any(is_in_front)
+        speed = 0;
+        return;
+    end
+
+    %% 6) 가장 가까운 전방 포인트 찾기
+    d2_all = dx_all.^2 + dy_all.^2;
+    d2_all(~is_in_front) = Inf;
+    [~, idx_closest] = min(d2_all);
+
+    %% 7) 로컬 좌표 변환
+    c = cos(-head); s = sin(-head);
+    R = [c, -s; s, c];
+    rel_global = [x_wp - X_ego, y_wp - Y_ego]';
+    local_wp = R * rel_global;
+    Local_Waypoints = local_wp';
+    local_point = Local_Waypoints(idx_closest, :);
+    x_local = local_point(1);
+    y_local = local_point(2);
+
+    %% 8) Stanley Controller 적용
+    dx_path = x_wp(min(idx_closest+1, N)) - x_wp(idx_closest);
+    dy_path = y_wp(min(idx_closest+1, N)) - y_wp(idx_closest);
+    path_yaw = atan2(dy_path, dx_path);
+    heading_error = wrapToPi(path_yaw - head);
+
+    % Cross Track Error (로컬 y좌표 사용)
+    cte = local_point(2);
+
+    %% 9) ⏱ 속도 자동 조정 (CTE 기반 감속)
+    speed = v_base - K_cte * abs(cte);
+    speed = max(v_min, min(speed, v_max));  % 속도 제한 적용
+
+    %% 10) 최종 조향각 계산 (Stanley)
+    steering_angle = heading_error + atan2(K_stanley * cte, speed + epsilon);
+end
+
+%% ===== 각도 wrap 함수 =====
+function angle = wrapToPi(theta)
+    angle = mod(theta + pi, 2*pi) - pi;
+end

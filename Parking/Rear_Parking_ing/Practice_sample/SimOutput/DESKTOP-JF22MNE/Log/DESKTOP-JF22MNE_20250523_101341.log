@@ -1,0 +1,614 @@
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 10:17:40
+TIME	0.001
+ERROR		Vehicle StartPos: Start position not on Route 1 (ObjId 176).
+ERROR		CM_Main.c: Initialization failed (CM_Main_Begin()=-3)
+SIM_ABORT	evaluation	0s	0m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 10:22:30
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747963350
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	14.153
+SIM_END		evaluation	14.15s	27.8027m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 10:23:37
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747963417
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	16.953
+SIM_END		evaluation	16.95s	33.4027m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 10:28:33
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747963713
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	8.353
+SIM_END		evaluation	8.35s	16.2027m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 10:32:30
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747963950
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	20.754
+ERROR		Vehicle leaves road at about x=47.6007, y=-22.1344 TireNo=1
+SIM_ABORT	evaluation	20.757s	41.0677m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 10:35:08
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747964108
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	20.754
+ERROR		Vehicle leaves road at about x=47.6007, y=-22.1344 TireNo=1
+SIM_ABORT	evaluation	20.757s	41.0677m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 10:40:58
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747964458
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	6.853
+SIM_END		evaluation	6.85s	13.2027m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 10:57:42
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747965462
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	35.440
+SIM_END		evaluation	35.437s	50.5693m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 10:59:33
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747965573
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	30.445
+ERROR		Vehicle leaves road at about x=19.987, y=-1.3989 TireNo=1
+SIM_ABORT	evaluation	30.448s	59.5651m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 11:01:16
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747965676
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	44.879
+SIM_END		evaluation	44.876s	43.3751m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 11:16:38
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747966598
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	56.345
+SIM_END		evaluation	56.342s	43.3725m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 11:20:23
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747966823
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	41.449
+SIM_END		evaluation	41.446s	43.3703m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 11:27:40
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747967260
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	45.873
+SIM_END		evaluation	45.87s	43.3711m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 11:29:16
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747967356
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	40.277
+SIM_END		evaluation	40.274s	50.5702m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 11:33:10
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747967590
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	36.853
+SIM_END		evaluation	36.85s	44.7618m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 11:39:10
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747967950
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	28.210
+SIM_END		evaluation	28.207s	44.7589m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 11:40:41
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747968041
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	37.347
+SIM_END		evaluation	37.344s	57.8385m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 11:55:48
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747968948
+TIME	0.000
+SIMULATE	evaluation
+
+SIM_END		evaluation	0s	0m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 11:57:20
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747969040
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	30.678
+ERROR		Vehicle leaves road at about x=21.1231, y=-1.39934 TireNo=1
+SIM_ABORT	evaluation	30.681s	57.669m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 12:02:11
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747969331
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	30.678
+ERROR		Vehicle leaves road at about x=21.1231, y=-1.39934 TireNo=1
+SIM_ABORT	evaluation	30.681s	57.669m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 12:18:42
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747970322
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	30.678
+ERROR		Vehicle leaves road at about x=21.1231, y=-1.39934 TireNo=1
+SIM_ABORT	evaluation	30.681s	57.669m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 12:37:43
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747971463
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	30.678
+ERROR		Vehicle leaves road at about x=21.1231, y=-1.39934 TireNo=1
+SIM_ABORT	evaluation	30.681s	57.669m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 12:43:52
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747971832
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	30.678
+ERROR		Vehicle leaves road at about x=21.1231, y=-1.39934 TireNo=1
+SIM_ABORT	evaluation	30.681s	57.669m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 12:46:49
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747972009
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	45.171
+SIM_END		evaluation	45.168s	44.4111m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 12:48:08
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747972088
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	76.709
+SIM_END		evaluation	76.706s	113.192m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 12:52:02
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747972322
+TIME	0.000
+SIMULATE	evaluation
+
+SIM_END		evaluation	0.603s	0.596933m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 12:52:43
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747972363
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	21.510
+SIM_END		evaluation	21.507s	42.844m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 12:56:02
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747972562
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	11.620
+SIM_END		evaluation	11.617s	22.7923m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 13:00:03
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747972803
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	30.678
+ERROR		Vehicle leaves road at about x=21.1231, y=-1.39934 TireNo=1
+SIM_ABORT	evaluation	30.681s	57.669m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 13:02:46
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747972966
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	55.728
+SIM_END		evaluation	55.725s	95.405m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 13:07:51
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747973271
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	30.101
+ERROR		Vehicle leaves road at about x=21.1247, y=-1.39861 TireNo=1
+SIM_ABORT	evaluation	30.104s	56.9356m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 13:09:01
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747973341
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	30.649
+ERROR		Vehicle leaves road at about x=21.0587, y=-1.39885 TireNo=1
+SIM_ABORT	evaluation	30.652s	57.6332m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 13:15:52
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747973752
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	27.686
+SIM_END		evaluation	27.683s	54.0187m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 13:18:12
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747973893
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	16.905
+ERROR		LineSensor 0:  xyz (5.47 -43.61 2.87) not found on Road
+SIM_ABORT	evaluation	16.908s	31.9306m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 13:20:10
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747974010
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	16.905
+ERROR		LineSensor 0:  xyz (5.47 -43.61 2.87) not found on Road
+SIM_ABORT	evaluation	16.908s	31.9306m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 13:21:02
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747974062
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	30.649
+ERROR		Vehicle leaves road at about x=21.0587, y=-1.39885 TireNo=1
+SIM_ABORT	evaluation	30.652s	57.6332m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 13:22:08
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747974128
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	10.288
+SIM_END		evaluation	10.285s	20.1282m
+APPLICATION	CarMaker 14.0.1 - Car_Generic #5 (win64-14.0.1)
+COMPILED	jetbrains@05dcd26e64f8 2025-01-28 11:06:46
+ 
+		I/O Configuration: default
+SIM_START	evaluation	2025-05-23 13:22:33
+TIME	0.001
+		No route selected for ego vehicle
+		Environment Generic: model disabled (works only on route)
+		Road Sensor: evaluation of route/path disabled
+		Maneuver using IPGDriver disabled (works only on route)
+		Current random seed value = 1747974153
+TIME	0.000
+SIMULATE	evaluation
+
+TIME	30.649
+ERROR		Vehicle leaves road at about x=21.0587, y=-1.39885 TireNo=1
+SIM_ABORT	evaluation	30.652s	57.6332m
