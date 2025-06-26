@@ -1,0 +1,326 @@
+function [x_path, y_path] = rrt_star_planner(map, startPose, goalPose, mapboundary)
+    %% ===== Persistent 저장 =====
+    persistent path_initialized x_path_cached y_path_cached nPath_cached
+    maxPathLength = 500;
+    resolution = 0.05;
+
+    if isempty(path_initialized)
+        path_initialized = false;
+        x_path_cached = zeros(maxPathLength, 1);
+        y_path_cached = zeros(maxPathLength, 1);
+        nPath_cached = 1;
+    end
+
+    if path_initialized
+        x_path = x_path_cached(1:nPath_cached);
+        y_path = y_path_cached(1:nPath_cached);
+        return;
+    end
+
+    %% 설정
+    visualize      = false;
+    maxIter        = 5000;
+    stepSize       = 2;
+    goalSampleRate = 0.1;
+    successDistTh  = 5;
+    collisionRes   = 0.5;
+    searchRadius   = 10;
+    safetyDist     = 45;
+    
+    %% 바운더리 기반 인덱스 변환용 파라미터
+    x_values = mapboundary(1:2:end);
+    y_values = mapboundary(2:2:end);
+    x_min = min(x_values);
+    y_max = max(y_values);
+
+    %% 실좌표 → 인덱스 변환
+    toGrid = @(x, y) [(x - x_min)/resolution +  1, (y_max - y)/resolution + 1];
+
+    start_grid = toGrid(startPose(1), startPose(2));
+    goal_grid  = toGrid(goalPose(1), goalPose(2));
+
+    %% 트리 초기화 (모든 노드는 인덱스 좌표로 유지)
+    nodes = struct('x', start_grid(1), 'y', start_grid(2), ...
+                   'parent', 0, 'cost', 0);
+
+    %% 경로 및 출력 초기화
+    path   = struct('x', {}, 'y', {}, 'parent', {}, 'cost', {});
+    x_path = zeros(maxPathLength, 1);
+    y_path = zeros(maxPathLength, 1);
+
+    %% RRT* 메인 루프 (모든 연산 인덱스 기반)
+    for iter = 1:maxIter
+        if rand < goalSampleRate
+            xr = goal_grid;
+        else
+            xr = [randi([1, size(map,2)]), randi([1, size(map,1)])];
+        end
+
+        [nearestIdx, nearXY] = findNearest(nodes, xr);
+        theta = atan2(xr(2)-nearXY(2), xr(1)-nearXY(1));
+        newXY = nearXY + stepSize * [cos(theta), sin(theta)];
+
+        if isCollision(newXY, map) || ...
+           isPathCollision(nearXY, newXY, map, collisionRes) || ...
+           isNearObstacle(newXY, map, safetyDist)
+            continue;
+        end
+
+        nearIdxs = findNearNodes(nodes, newXY, searchRadius);
+        minCost   = nodes(nearestIdx).cost + norm(newXY - nearXY);
+        minParent = nearestIdx;
+
+        for idx = 1:numel(nearIdxs)
+            iNode = nearIdxs(idx);
+            pxy   = [nodes(iNode).x, nodes(iNode).y];
+            if ~isPathCollision(pxy, newXY, map, collisionRes)
+                c = nodes(iNode).cost + norm(newXY - pxy);
+                if c < minCost
+                    minCost   = c;
+                    minParent = iNode;
+                end
+            end
+        end
+
+        newNode = struct('x', newXY(1), 'y', newXY(2), ...
+                         'parent', minParent, 'cost', minCost);
+        nodes(end+1) = newNode;
+        newIdx       = numel(nodes);
+
+        for idx = 1:numel(nearIdxs)
+            iNode = nearIdxs(idx);
+            pxy   = [nodes(iNode).x, nodes(iNode).y];
+            c     = newNode.cost + norm([newNode.x, newNode.y] - pxy);
+            if c < nodes(iNode).cost && ...
+               ~isPathCollision([newNode.x,newNode.y], pxy, map, collisionRes)
+                nodes(iNode).parent = newIdx;
+                nodes(iNode).cost   = c;
+            end
+        end
+
+        if visualize
+            plot([nodes(newNode.parent).x, newNode.x], ...
+                 [nodes(newNode.parent).y, newNode.y], '-r');
+            hold on;
+        end
+
+        if norm(newXY - goal_grid) < successDistTh
+            if visualize, disp('[-] GOAL REACHED'); end
+            path = backtrace(nodes, newIdx);
+            break;
+        end
+    end
+
+    %% 결과 경로 반환 (인덱스 → 실좌표로 역변환)
+    nPath = min(numel(path), maxPathLength);
+    x_path_cached = zeros(maxPathLength, 1);
+    y_path_cached = zeros(maxPathLength, 1);
+    for k = 1:nPath
+        x_path_cached(k) = (path(k).x - 1) * resolution + x_min;
+        y_path_cached(k) = y_max - (path(k).y - 1) * resolution;
+    end
+
+    nPath_cached = nPath;
+    path_initialized = true;
+
+    %% === Lightweight Smoothing for Simulink Compatibility ===
+    smooth_window = 15;  % 홀수 추천
+    if nPath >= smooth_window
+        x = x_path_cached(1:nPath);
+        y = y_path_cached(1:nPath);
+
+        x_smooth = movmean(x, smooth_window);
+        y_smooth = movmean(y, smooth_window);
+
+        % 재샘플링 (고정된 개수로)
+        smoothN = 100;
+        idx_original = linspace(1, numel(x_smooth), smoothN);
+        x_path = interp1(1:numel(x_smooth), x_smooth, idx_original, 'linear')';
+        y_path = interp1(1:numel(y_smooth), y_smooth, idx_original, 'linear')';
+    else
+        x_path = x_path_cached(1:nPath);
+        y_path = y_path_cached(1:nPath);
+    end
+
+
+end
+
+%% ======= 서브 함수들 =======
+
+function [idx, xy] = findNearest(nodes, sampleXY)
+    d = arrayfun(@(n) hypot(n.x - sampleXY(1), n.y - sampleXY(2)), nodes);
+    [~, idx] = min(d);
+    xy = [nodes(idx).x, nodes(idx).y];
+end
+
+function nearIdxs = findNearNodes(nodes, pos, radius)
+    maxNodes = 1000;
+    nearIdxs = zeros(1, maxNodes);
+    count = 0;
+    for i = 1:numel(nodes)
+        if hypot(nodes(i).x - pos(1), nodes(i).y - pos(2)) <= radius
+            count = count + 1;
+            nearIdxs(count) = i;
+        end
+    end
+    nearIdxs = nearIdxs(1:count);
+end
+
+function flag = isCollision(pt, map)
+    x = round(pt(1)); y = round(pt(2));
+    flag = x < 1 || x > size(map,2) || y < 1 || y > size(map,1) || map(y,x) == 1;
+end
+
+function flag = isPathCollision(p1, p2, map, step)
+    dist = norm(p2 - p1);
+    N = max(1, ceil(dist / step));
+    flag = false;
+    for i = 0:N
+        pt = p1 + (p2 - p1) * (i / N);
+        if isCollision(pt, map)
+            flag = true; return;
+        end
+    end
+end
+
+function flag = isNearObstacle(pt, map, safeDist)
+    x0 = round(pt(1)); y0 = round(pt(2));
+    r  = ceil(safeDist);
+    [X, Y] = meshgrid((x0 - r):(x0 + r), (y0 - r):(y0 + r));
+    D2 = (X - pt(1)).^2 + (Y - pt(2)).^2;
+    mask = D2 <= safeDist^2;
+    X = X(mask); Y = Y(mask);
+    valid = X >= 1 & X <= size(map,2) & Y >= 1 & Y <= size(map,1);
+    flag  = any(map(sub2ind(size(map), Y(valid), X(valid))) == 1);
+end
+
+function path = backtrace(nodes, idx)
+    maxPathLen = 500;
+    dummyNode = struct('x', 0, 'y', 0, 'parent', 0, 'cost', 0);
+    path = repmat(dummyNode, maxPathLen, 1);
+    count = 0;
+    while idx ~= 0 && count < maxPathLen
+        count = count + 1;
+        path(count) = nodes(idx);
+        idx = nodes(idx).parent;
+    end
+    path = path(count:-1:1);
+end
+==================================================
+function [steering_angle, speed, x_local, y_local] = ...
+    global_to_local_waypoints(waypoints_x, waypoints_y, ...
+                              X_ego, Y_ego, head, goal_pose)
+%#codegen
+
+    %% 1) 파라미터
+    stop_threshold          = 2.5;
+    heading_align_threshold = 6.5;
+    v_base                  = 5.0;   % [m/s]
+    v_min                   = 1.5;
+    v_max                   = 10.0;
+    smooth_window           = 5;     % 웨이포인트 이동평균 윈도우
+    alpha_filter            = 0.7;   % 조향각 저역통과 계수 (0~1)
+
+    %% 2) 초기화
+    x_local = 0;  y_local = 0;
+    steering_angle = 0;
+    speed = v_base;
+
+    %% 3) 목표점까지 거리 계산
+    goal_dist = norm([X_ego - goal_pose(1), Y_ego - goal_pose(2)]);
+    if goal_dist < stop_threshold
+        speed = 0; steering_angle = 0; return;
+    elseif goal_dist < heading_align_threshold
+        heading_error   = wrapToPi(pi/2 - head);
+        steering_angle = atan2(2*2.9*sin(heading_error), goal_dist + 1e-3);
+        speed           = 3;
+        return;
+    end
+
+    %% 4) 유효 웨이포인트 추출 및 스무딩
+    valid = ~isnan(waypoints_x) & ~isnan(waypoints_y);
+    x_wp0 = waypoints_x(valid);
+    y_wp0 = waypoints_y(valid);
+    if numel(x_wp0)<2
+        speed = 0; return;
+    end
+    % — 이동평균 스무딩 —
+    x_wp = smoothdata(x_wp0, 'movmean', smooth_window);
+    y_wp = smoothdata(y_wp0, 'movmean', smooth_window);
+
+    %% 5) 가장 가까운 포인트 로컬 좌표
+    dists = hypot(x_wp - X_ego, y_wp - Y_ego);
+    [~, idx_closest] = min(dists);
+    dx = x_wp(idx_closest) - X_ego;
+    dy = y_wp(idx_closest) - Y_ego;
+    x_local = dx*cos(-head) - dy*sin(-head);
+    y_local = dx*sin(-head) + dy*cos(-head);
+
+    %% 6) Pure Pursuit 조향각 계산
+    [steer_pp, ~] = pure_pursuit(x_wp, y_wp, [X_ego, Y_ego], head);
+
+    %% 7) 조향각 저역통과 필터
+    persistent last_steer
+    if isempty(last_steer)
+        last_steer = steer_pp;
+    end
+    steering_angle = alpha_filter * last_steer + (1-alpha_filter) * steer_pp;
+    last_steer = steering_angle;
+
+    %% 8) 속도 제한
+    speed = max(v_min, min(v_max, v_base));
+end
+
+%% ===== Pure Pursuit 함수 (변경 없음) =====
+function [steering_angle, start_idx] = pure_pursuit(waypoints_x, waypoints_y, vehicle_position, head)
+    persistent last_target_idx;
+    if isempty(last_target_idx), last_target_idx = 1; end
+
+    WHEEL_BASE = 20.0;
+    lookahead_dist = 5.5;
+    num_points = length(waypoints_x);
+
+    x_ego = vehicle_position(1);
+    y_ego = vehicle_position(2);
+    local_waypoints = zeros(num_points, 2);
+
+    for i = 1:num_points
+        dx = waypoints_x(i) - x_ego;
+        dy = waypoints_y(i) - y_ego;
+        local_waypoints(i,:) = [ dx*cos(-head)-dy*sin(-head), ...
+                                 dx*sin(-head)+dy*cos(-head) ];
+    end
+
+    d2 = hypot(waypoints_x - x_ego, waypoints_y - y_ego);
+    [~, closest_idx] = min(d2);
+    start_idx = max(last_target_idx, closest_idx);
+
+    target_idx = -1;
+    for i = start_idx:num_points
+        if norm(local_waypoints(i,:))>lookahead_dist && local_waypoints(i,1)>0
+            target_idx = i; break;
+        end
+    end
+    if target_idx<0
+        for i = 1:start_idx-1
+            if norm(local_waypoints(i,:))>lookahead_dist && local_waypoints(i,1)>0
+                target_idx = i; break;
+            end
+        end
+    end
+    if target_idx<0
+        steering_angle = 0; return;
+    end
+
+    pt = local_waypoints(target_idx,:);
+    alpha = wrapToPi(atan2(pt(2),pt(1)));
+    ld = min(max(norm(pt),2.0),20.0);
+    steering_angle = atan2(2*WHEEL_BASE*sin(alpha), ld);
+
+    last_target_idx = target_idx;
+end
+
+%% ===== 각도 wrap 함수 (변경 없음) =====
+function angle = wrapToPi(theta)
+    angle = mod(theta + pi, 2*pi) - pi;
+end
